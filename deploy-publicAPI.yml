@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-publicapi
+  namespace: public
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pod-publicapi
+
+  template:
+    metadata:
+      name: pod-publicapi
+      labels:
+        app: pod-publicapi
+    spec:
+      containers:
+        - name: publicapi
+          image: cachac/kubelabs_publicapi:v1.1
+          ports:
+            - containerPort: 3000
+              name: publicapi
+            - containerPort: 3080
+              name: healthcheck
+          volumeMounts:
+          - name: logs-volume
+            mountPath: /app/logs
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 3080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 3080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+          envFrom:
+          - configMapRef:
+              name: configmap-privateapi
+      volumes:
+        - name: logs-volume
+          persistentVolumeClaim:
+            claimName: persistentvolumeclaim-publicapi

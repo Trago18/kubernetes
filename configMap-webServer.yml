@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-webserver
+  namespace: public
+data:
+  config_js: |
+    var config = (() => {
+      return {
+        API: "http://api.franksa2.kubelabs.dev/graphql",
+        WEBSOCKET: "ws://websocket.franksa2.kubelabs.dev/graphql",
+      };
+    })();

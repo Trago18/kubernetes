@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-privateapi
+  namespace: private
+spec:
+  type: ClusterIP
+  selector:
+    app: pod-privateapi
+  ports:
+    - name: pod-privateapi
+      protocol: TCP
+      port: 3002
+      targetPort: 3002

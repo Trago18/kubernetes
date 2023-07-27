@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-websocket
+  namespace: public
+spec:
+  type: ClusterIP
+  selector:
+    app: pod-websocket
+  ports:
+    - name: pod-websocket
+      protocol: TCP
+      port: 3001
+      targetPort: 3001

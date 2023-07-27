@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-webserver
+  namespace: public
+spec:
+  defaultBackend:
+    service:
+      name: svc-webserver
+      port:
+        number: 80
+  rules:
+  - host: franksa2.kubelabs.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: svc-webserver
+            port:
+              number: 80
+
+  - host: www.franksa2.kubelabs.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: svc-webserver
+            port:
+              number: 80

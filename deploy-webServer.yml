@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-webserver
+  namespace: public
+
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # maxSurge: 25%
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: pod-webserver
+
+  template:
+    metadata:
+      name: pod-webserver
+      labels:
+        app: pod-webserver
+    spec:
+      containers:
+        - name: webserver
+          image: cachac/kubelabs_webapp:1.1.7
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config-vol
+              mountPath: /usr/share/nginx/html/config.js
+              subPath: config.js
+              readOnly: true
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 10m
+              memory: 50Mi
+      volumes:
+        - name: config-vol
+          configMap:
+            name: configmap-webserver
+            items:
+              - key: config_js
+                path: config.js #nombre que va a tener el file

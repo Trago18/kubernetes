@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-privateapi
+  namespace: private
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pod-privateapi
+
+  template:
+    metadata:
+      name: pod-privateapi
+      labels:
+        app: pod-privateapi
+    spec:
+      containers:
+        - name: privateapi
+          image: cachac/kubelabs_privateapi:1.0.2
+          ports:
+            - containerPort: 3002
+              name: privateapi
+            - containerPort: 3080
+              name: healthcheck
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 3082
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 3082
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5

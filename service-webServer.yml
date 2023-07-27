@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-webserver
+  namespace: public
+spec:
+  type: ClusterIP
+  selector:
+    app: pod-webserver
+  ports:
+    - port: 80
+      targetPort: 8080

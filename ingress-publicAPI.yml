@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-publicapi
+  namespace: public
+spec:
+  rules:
+  - host: api.franksa2.kubelabs.dev
+    http:
+      paths:
+      - path: /graphql
+        pathType: Prefix
+        backend:
+          service:
+            name: svc-publicapi
+            port:
+              number: 3000
+
+  - host: www.api.franksa2.kubelabs.dev
+    http:
+      paths:
+      - path: /graphql
+        pathType: Prefix
+        backend:
+          service:
+            name: svc-publicapi
+            port:
+              number: 3000
